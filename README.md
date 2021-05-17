@@ -1,0 +1,1 @@
+This project builds a Rust CLI application that reaches out to Finnhub for a company stock quote. The original tutorial can be found here: https://dev.to/hb/how-to-fetch-a-web-api-with-rust-1390
