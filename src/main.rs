@@ -3,6 +3,10 @@ use reqwest::Url;
 use serde_derive::{Deserialize, Serialize};
 use std::env;
 
+
+mod keys;
+pub use self::keys::api_key;
+
 #[derive(Serialize, Deserialize, Debug)]
 struct CompanyQuote {
     c: f64,
@@ -14,10 +18,10 @@ struct CompanyQuote {
 }
 
 impl CompanyQuote {
-    async fn get(symbol: &String, api_key: &String) -> Result<Self, ExitFailure> {
+    async fn get(symbol: &String, key: &String) -> Result<Self, ExitFailure> {
         let url = format!(
             "https://finnhub.io/api/v1/quote?symbol={}&token={}",
-            symbol, api_key
+            symbol, key
         );
 
         let url = Url::parse(&url)?;
@@ -29,7 +33,7 @@ impl CompanyQuote {
 
 #[tokio::main]
 async fn main() -> Result<(), ExitFailure> {
-    let api_key = "Your Key Here".to_string();
+    let key = api_key::sandbox_key();
     let args: Vec<String> = env::args().collect();
     let mut symbol: String = "AAPL".to_string();
 
@@ -39,7 +43,7 @@ async fn main() -> Result<(), ExitFailure> {
         symbol = args[1].clone();
     }
 
-    let res = CompanyQuote::get(&symbol, &api_key).await?;
+    let res = CompanyQuote::get(&symbol, &key).await?;
     println!("{}'s current stock price is {}", symbol, res.c);
 
     Ok(())
