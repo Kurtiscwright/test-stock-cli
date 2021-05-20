@@ -1,7 +1,8 @@
 use exitfailure::ExitFailure;
 use reqwest::Url;
 use serde_derive::{Deserialize, Serialize};
-use std::env;
+//use std::env;
+use std::io;
 
 
 mod keys;
@@ -34,17 +35,19 @@ impl CompanyQuote {
 #[tokio::main]
 async fn main() -> Result<(), ExitFailure> {
     let key = api_key::sandbox_key();
-    let args: Vec<String> = env::args().collect();
+    let mut company = String::new();
+    io::stdin().read_line(&mut company).expect("Please input a valid company symbol");
     let mut symbol: String = "AAPL".to_string();
 
-    if args.len() < 2 {
+    if company.len() < 2 {
         println!("Since you didn't specify a company symbol, it is defaulted to AAPL.");
+        
     } else {
-        symbol = args[1].clone();
+        symbol = company.clone().to_uppercase();
     }
 
     let res = CompanyQuote::get(&symbol, &key).await?;
-    println!("{}'s current stock price is {}", symbol, res.c);
+    println!("{}'s current stock price is {}", &symbol[..symbol.len()-1], res.c);
 
     Ok(())
 }
