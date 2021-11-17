@@ -40,14 +40,13 @@ async fn main() -> Result<(), ExitFailure> {
     let mut symbol: String = "AAPL".to_string();
 
     if company.len() < 2 {
-        println!("Since you didn't specify a company symbol, it is defaulted to AAPL.");
-        
+        print!("Since you didn't specify a company symbol, it is defaulted to AAPL.");  
     } else {
         symbol = company.clone().to_uppercase();
     }
 
     let res = CompanyQuote::get(&symbol, &key).await?;
-    println!("{}'s current stock price is {}", &symbol[..symbol.len()-1], res.c);
+    print!("{}'s current stock price is {}", &symbol, res.c);
 
     Ok(())
 }
